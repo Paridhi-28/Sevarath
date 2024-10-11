@@ -17,6 +17,14 @@ export default (phase, { defaultConfig }) => {
           protocol: "https",
           hostname: "example.com",
         },
+        {
+          protocol: "https",
+          hostname: "github.com",
+        },
+        {
+          protocol: "https",
+          hostname: "blohth8gpzly7dan.public.blob.vercel-storage.com",
+        },
       ],
     },
   };

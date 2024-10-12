@@ -44,15 +44,23 @@ jest.mock("@/components/ui/Temp", () => {
   return MockTemp;
 });
 
+// Mocking the Partners component
+jest.mock("@/components/ui/Partner", () => {
+  const MockPartner = () => <div>Partners Component</div>;
+  MockPartner.displayName = "Partners";
+  return MockPartner;
+});
+
 describe("Home Page", () => {
-  it("should render Hero, InfoCards, Temp, Legacy, OurWork, and ProgrammesSection components", () => {
+  it("should render Hero, InfoCards, Temp, Legacy, OurWork, Partners, and ProgrammesSection components", () => {
     render(<Home />);
 
     expect(screen.getByText("Hero Component")).toBeInTheDocument();
     expect(screen.getByText("InfoCards Component")).toBeInTheDocument();
-    expect(screen.getByText("Temp Component")).toBeInTheDocument(); // Check for Temp
-    expect(screen.getByText("Legacy Component")).toBeInTheDocument(); // Check for Legacy
+    expect(screen.getByText("Temp Component")).toBeInTheDocument();
+    expect(screen.getByText("Legacy Component")).toBeInTheDocument();
     expect(screen.getByText("Our Work Component")).toBeInTheDocument();
+    expect(screen.getByText("Partners Component")).toBeInTheDocument();
     expect(
       screen.getByText("Programmes Section Component"),
     ).toBeInTheDocument();

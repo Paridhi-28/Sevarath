@@ -50,6 +50,8 @@ const FooterLink = ({ title, links }) => {
 };
 
 const Footer = () => {
+  console.log("Footer rendered");
+
   const footerLinks = [
     {
       title: "Support Us",
@@ -159,11 +161,11 @@ const Footer = () => {
           </div>
 
           {/* Contact Us section */}
-          <div className="w-full sm:w-1/2 lg:w-1/4 px-4 mt-6 md:mt-0">
-            <h2 className="text-green-300 font-bold tracking-widest text-md mb-3">
+          <div className="w-full sm:w-1/2 lg:w-1/4 px-4 mt-6 md:mt-0 flex flex-col items-center sm:items-start">
+            <h2 className="text-green-300 font-bold tracking-widest text-md mb-3 text-center sm:text-left">
               Contact Us
             </h2>
-            <p className="text-gray-300 flex items-center mb-2">
+            <p className="text-gray-300 flex items-center mb-2 text-center sm:text-left">
               <FaEnvelope className="mr-2" />
               <a
                 href={`mailto:${config.contact.email}`}
@@ -174,7 +176,7 @@ const Footer = () => {
                 {config.contact.email}
               </a>
             </p>
-            <p className="text-gray-300 flex items-center mb-2">
+            <p className="text-gray-300 flex items-center mb-2 text-center sm:text-left">
               <FaPhone className="mr-2" />
               <a
                 href={`tel:${config.contact.phone}`}

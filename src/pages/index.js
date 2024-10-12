@@ -4,6 +4,7 @@ import OurWork from "@/components/ui/OurWork";
 import ProgrammesSection from "@/components/ui/ProgrammesSection";
 import Legacy from "@/components/ui/Legacy";
 import Temp from "@/components/ui/Temp";
+import Partners from "@/components/ui/Partner";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <InfoCards />
       <Legacy />
       <OurWork />
+      <Partners />
       <ProgrammesSection />
     </>
   );

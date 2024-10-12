@@ -2,24 +2,21 @@ import { useRouter } from "next/router";
 import config from "@/lib/config";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setActiveLink(router.pathname);
-  }, [router.pathname]);
-
-  const toggleMenu = () => setIsOpen((prev) => !prev);
-
+  // Handler to set active link
   const handleLinkClick = (link) => {
     setActiveLink(link);
     setIsOpen(false);
   };
 
+  // Capitalizes the page name for display
   const capitalizePageName = (link) => {
     const formattedName =
       link === "/"
@@ -31,6 +28,7 @@ const Navbar = () => {
     return formattedName.charAt(0).toUpperCase() + formattedName.slice(1);
   };
 
+  // Navigation links
   const navLinks = [
     "/",
     "/ourLegacy",
@@ -39,6 +37,7 @@ const Navbar = () => {
     "/contactUs",
   ];
 
+  // Render navigation links
   const renderNavLinks = (isMobile = false) =>
     navLinks.map((link) => (
       <Link
@@ -56,8 +55,32 @@ const Navbar = () => {
       </Link>
     ));
 
+  // Handle route changes and scrolling
+  const handleRouteChange = useCallback((url) => {
+    setActiveLink(url);
+    setIsScrolled(url !== "/");
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50 || router.pathname !== "/");
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleRouteChange, router.pathname, router.events]); // Include router.events in the dependency array
+
   return (
-    <nav className="bg-[#063150] w-full z-10 top-0">
+    <nav
+      className={`fixed w-full z-10 top-0 transition-colors duration-300 ${
+        isScrolled ? "bg-[#063150]" : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto flex justify-between items-center md:px-0 lg:px-6 px-6 py-4">
         <div className="flex items-center">
           <Link href="/" aria-label="Home">
@@ -91,17 +114,25 @@ const Navbar = () => {
                 ? "bg-gradient-to-br from-blue-400 to-purple-500"
                 : "bg-white"
             }`}
-            onClick={toggleMenu}
+            onClick={() => setIsOpen((prev) => !prev)}
             aria-label="Toggle Menu"
           >
             <span
-              className={`block w-6 h-0.5 transition-all duration-300 ease-in-out transform ${isOpen ? "bg-white rotate-45 translate-y-1" : "bg-current"}`}
+              className={`block w-6 h-0.5 transition-all duration-300 ease-in-out transform ${
+                isOpen ? "bg-white rotate-45 translate-y-1" : "bg-current"
+              }`}
             ></span>
             <span
-              className={`block w-6 h-0.5 transition-all duration-300 ease-in-out ${isOpen ? "hidden" : "bg-current mt-1.5"}`}
+              className={`block w-6 h-0.5 transition-all duration-300 ease-in-out ${
+                isOpen ? "hidden" : "bg-current mt-1.5"
+              }`}
             ></span>
             <span
-              className={`block w-6 h-0.5 transition-all duration-300 ease-in-out transform ${isOpen ? "bg-white -rotate-45 -translate-y-1" : "bg-current mt-1.5"}`}
+              className={`block w-6 h-0.5 transition-all duration-300 ease-in-out transform ${
+                isOpen
+                  ? "bg-white -rotate-45 -translate-y-1"
+                  : "bg-current mt-1.5"
+              }`}
             ></span>
           </button>
         </div>

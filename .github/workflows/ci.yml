@@ -1,4 +1,4 @@
-name: Continious Intigration
+name: Continious Integration
 
 on:
   pull_request:

@@ -1,0 +1,53 @@
+name: CD Development
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  setup-environment:
+    name: Setup Node.js and Dependencies
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: 🛠 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 🗃 Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ matrix.node-version }}-
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 📦 Build Next.js Application
+        run: npm run build
+
+  deploy-to-development:
+    name: 🚀 Deploy to Development (dev branch)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev'
+    needs: setup-environment
+
+    steps:
+      - name: 🛠 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel (Development)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_DEVELOPMENT_TOKEN }}
+        run: |
+          npx vercel --token $VERCEL_TOKEN --env NEXT_PUBLIC_ENV=development --yes --confirm

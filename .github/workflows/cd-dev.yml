@@ -1,4 +1,4 @@
-name: CD Development
+name: Continious Deployment Development
 
 on:
   push:
